@@ -1,0 +1,4 @@
+192.168.199.38:8443 {
+    tls internal
+    reverse_proxy localhost:8003
+}
