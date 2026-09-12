@@ -65,6 +65,25 @@ Caddyfile                  # Optional reverse-proxy config for exposing the ADK 
 
 `Caddyfile` contains a sample [Caddy](https://caddyserver.com/) reverse-proxy config that terminates TLS and forwards to `localhost:8003` (the default `adk web` port). It's set up for a specific local IP address — treat it as a template and edit the address/port for your own network before using it.
 
+## Example run
+
+A run in the ADK web UI (`adk web`), asking the agent council to inventory and clean up a real Obsidian vault:
+
+**The Orchestrator scans the vault and hands the Editor its assignment.**
+![Orchestrator lists the vault's markdown files](images/01-orchestrator-lists-files.png)
+
+**The Orchestrator issues a precise directive after the Reviewer flags a messy file.**
+![Orchestrator gives the Editor a detailed cleanup directive](images/02-orchestrator-directive.png)
+
+**The Editor calls `edit_markdown_with_groq` and reports the result; the Reviewer signs off with `STOP`.**
+![Editor applies the edit via Groq and the Reviewer approves](images/03-editor-applies-edit.png)
+
+**A follow-up request in the same session — the Boss issues a new directive.**
+![Boss gives a new directive for a follow-up request](images/04-boss-new-directive.png)
+
+**The Editor confirms the change and the loop wraps up.**
+![Editor confirms the edit and the council stands down](images/05-editor-confirms-and-wraps-up.png)
+
 ## Known limitations / notes
 
 - `parse_roadmap_markdown` expects GitHub-style task checkboxes (`- [ ]` / `- [x]`) to extract milestones; other list formats aren't recognized.
