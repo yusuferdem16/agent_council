@@ -1,2 +1,4 @@
 .env
 .adk/
+obsidian_vault/
+.agent-backups/

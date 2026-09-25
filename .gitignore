@@ -11,6 +11,11 @@ __pycache__/
 # ADK local state
 .adk/
 
+# Default vault location and edit backups, when running without
+# OBSIDIAN_VAULT_PATH/VAULT_PATH set (see my_agent/tools/config.py)
+my_agent/obsidian_vault/
+.agent-backups/
+
 # Editor / OS
 .vscode/
 .DS_Store

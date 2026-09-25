@@ -1,4 +1,3 @@
 google-adk
-openai
 groq
 python-dotenv

@@ -1,29 +1,33 @@
-from pathlib import Path
-
-from .config import resolve_directory_path
+from .config import VaultPathError, get_vault_root, iter_markdown_files, resolve_vault_path, to_vault_relative
 
 
-def list_markdown_files(directory_path: str | None = None) -> list[str]:
+def list_markdown_files(subfolder: str | None = None) -> list[str]:
     """
-    Lists all markdown (.md) files available in the specified directory.
-    Use this tool to find out what files exist before attempting to read or edit them.
+    Recursively lists all markdown (.md) files in the configured vault,
+    skipping .obsidian/, .trash/, .agent-backups/ and other hidden folders.
 
     Args:
-        directory_path: Optional folder to scan. If omitted, uses the environment-configured vault path.
+        subfolder: Optional vault-relative subfolder to scope the search to
+            (e.g. 'Portfolio Project/Azure DP900'). If omitted, scans the
+            whole vault.
 
     Returns:
-        A list of filenames (e.g., ['docker_microservices.md', 'api_workflow.md']).
-        Returns an error message string if the directory does not exist.
+        A sorted list of vault-relative paths (e.g.
+        ['Portfolio Project/Azure DP900/Core Data Concepts/Explore core data concepts.md']).
+        Returns a single-item list with an error message if the vault/subfolder
+        can't be scanned.
     """
-    resolved_path = resolve_directory_path(directory_path)
-    path = Path(resolved_path)
+    try:
+        root = resolve_vault_path(subfolder) if subfolder else get_vault_root()
+    except VaultPathError as e:
+        return [f"Error: {e}"]
 
-    if not path.exists() or not path.is_dir():
-        return [f"Error: Directory '{resolved_path}' not found."]
+    if not root.exists() or not root.is_dir():
+        return [f"Error: Directory '{subfolder or root}' not found."]
 
-    md_files = [f.name for f in path.glob('*.md')]
+    md_files = iter_markdown_files(root)
 
     if not md_files:
-        return [f"No markdown files found in this directory: {resolved_path}"]
+        return [f"No markdown files found in '{subfolder or 'the vault'}'."]
 
-    return md_files
+    return [to_vault_relative(f) for f in md_files]
